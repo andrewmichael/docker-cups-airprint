@@ -1,12 +1,4 @@
-FROM ubuntu:zesty
-
-# Add repos
-RUN echo 'deb http://us.archive.ubuntu.com/ubuntu/ zesty multiverse' >> /etc/apt/sources.list.d/multiverse.list && \
-	echo 'deb-src http://us.archive.ubuntu.com/ubuntu/ zesty multiverse' >> /etc/apt/sources.list.d/multiverse.list && \
-	echo 'deb http://us.archive.ubuntu.com/ubuntu/ zesty-updates multiverse' >> /etc/apt/sources.list.d/multiverse.list && \
-	echo 'deb-src http://us.archive.ubuntu.com/ubuntu/ zesty-updates multiverse' >> /etc/apt/sources.list.d/multiverse.list && \
-	echo 'deb http://archive.ubuntu.com/ubuntu/ zesty-security multiverse' >> /etc/apt/sources.list.d/multiverse.list && \
-	echo 'deb-src http://archive.ubuntu.com/ubuntu/ zesty-security multiverse' >> /etc/apt/sources.list.d/multiverse.list
+FROM ubuntu:18.04
 
 # Install the packages we need. Avahi will be included
 RUN apt-get update && apt-get install -y \
@@ -15,7 +7,12 @@ RUN apt-get update && apt-get install -y \
 	cups-pdf \
 	inotify-tools \
 	python-cups \
-&& rm -rf /var/lib/apt/lists/*
+	wget
+
+RUN wget http://downloadcenter.samsung.com/content/DR/201407/20140710110802438/ULD_V1.00.27.04.tar.gz && tar xvzf ULD_V1.00.27.04.tar.gz
+RUN yes | /uld/install.sh
+
+RUN rm -rf /var/lib/apt/lists/*
 
 # This will use port 631
 EXPOSE 631
